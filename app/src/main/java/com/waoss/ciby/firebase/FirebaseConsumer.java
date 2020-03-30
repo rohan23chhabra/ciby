@@ -51,5 +51,10 @@ public class FirebaseConsumer implements Consumer {
         public Location getLocation() {
             return null;
         }
+
+        @Override
+        public String getPhoneNumber() {
+            return null;
+        }
     }
 }

@@ -5,21 +5,24 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.*;
-import static com.waoss.ciby.utils.VerificationUtils.*;
+import com.google.gson.Gson;
+import com.waoss.ciby.firebase.FirebaseSession;
+import com.waoss.ciby.utils.PojoUser;
+import com.waoss.ciby.utils.PojoUserCredentials;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (progressDialog != null) {
                     dismissProgressDialog(progressDialog);
                 }
-                notifyUserAndRetry("Your Phone Number Verification is failed.Retry again!");
+                notifyUserAndRetry("Your Phone Number Verification is failed. Retry again!");
             }
 
             @Override
@@ -118,12 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                showLoginActivity();
-            }
-        });
+        alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> showLoginActivity());
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
@@ -133,6 +131,10 @@ public class LoginActivity extends AppCompatActivity {
         String phoneNumber = phoneNumberField.getText().toString();
         Log.d("phone-number", phoneNumber);
 
+        // If checkbox is checked (register)
+        // Then authenticate phone number and save session data in firebase.
+        // Else (login)
+        // Authenticate the user credentials from data saved in firebase.
         if (chooseAuthField.isChecked()) {
             if (phoneNumber != null && !phoneNumber.isEmpty()) {
                 verifyPhoneNumber(phoneNumber);
@@ -140,6 +142,9 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 showToast("Please enter a valid number to continue!");
             }
+        } else {
+            FirebaseSession session = new FirebaseSession(false);
+            boolean loginStatus = session.login(new PojoUserCredentials(phoneNumber, passwordField.getText().toString()));
         }
         // Sign in or register accordingly.
     }
@@ -167,20 +172,21 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
 
-                            FirebaseUser user = task.getResult().getUser();
-                            Log.d("Sign in with phone auth", "Success " + user);
-                            showChoiceActivity();
-                        } else {
-                            notifyUserAndRetry("Your Phone Number Verification is failed.Retry again!");
-                        }
+                        FirebaseUser user = task.getResult().getUser();
+                        Log.d("Sign in with phone auth", "Success " + user);
+                        FirebaseSession session = new FirebaseSession(true);
+                        session.writeData("users", new Gson().toJson(new PojoUser(phoneNumberField.getText().toString())));
+                        Log.d("nigga", "nigga vibin at " + session.readData("users", "?orderBy=\"username\"&equalTo=\"918840376642\""));
+                        showChoiceActivity();
+                    } else {
+                        notifyUserAndRetry("Your Phone Number Verification is failed.Retry again!");
                     }
                 });
     }
