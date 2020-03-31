@@ -48,13 +48,10 @@ public class ConsumerActivity extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.listview_producer, R.id.producer_phone_number, phoneNumbers);
         listView.setAdapter(arrayAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String phoneNumber = (String) parent.getItemAtPosition(position);
-                Log.d("click-click", phoneNumber);
-                showDetailedProducerActivity(phoneNumber);
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String phoneNumber = (String) parent.getItemAtPosition(position);
+            Log.d("click-click", phoneNumber);
+            showDetailedProducerActivity(phoneNumber);
         });
     }
 
