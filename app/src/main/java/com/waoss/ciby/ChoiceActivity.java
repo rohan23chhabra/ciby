@@ -1,31 +1,31 @@
 package com.waoss.ciby;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import androidx.annotation.NonNull;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.database.*;
+import com.waoss.ciby.apis.UserType;
+
+import static com.waoss.ciby.apis.UserType.*;
 
 public class ChoiceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choice);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference();
-        final Object[] pojo = new Object[1];
-        reference.child("pojo").child("name").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                pojo[0] = dataSnapshot.getValue();
-                Log.d("corona", pojo[0].toString());
-            }
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                databaseError.toException().printStackTrace();
-            }
-        });
-        reference.child("pojo").child("name").setValue("lol");
+    public void producerOnClick(View view) {
+        startLocationActivity(PRODUCER);
+    }
+
+    private void startLocationActivity(final UserType userType) {
+        final Intent intent = new Intent(this, LocationActivity.class);
+        intent.putExtra("user-type", userType.toString());
+        startActivity(intent);
+    }
+
+    public void consumerOnClick(View view) {
+        startLocationActivity(CONSUMER);
     }
 }

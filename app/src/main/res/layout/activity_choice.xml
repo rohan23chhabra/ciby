@@ -15,6 +15,7 @@
     </View>
     <Button
             android:text="Are you a producer?"
+            android:onClick="producerOnClick"
             android:layout_width="250dp"
             android:layout_gravity="center"
             android:layout_weight="20"
@@ -26,6 +27,7 @@
     </View>
     <Button
             android:text="Are you a consumer?"
+            android:onClick="consumerOnClick"
             android:layout_width="250dp"
             android:layout_gravity="center"
             android:layout_height="0dp" android:id="@+id/are_you_a_consumer" android:layout_weight="20"/>

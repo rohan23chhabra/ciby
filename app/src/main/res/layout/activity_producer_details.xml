@@ -1,64 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.waoss.ciby.ProducerActivity">
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="0dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="24dp"
-        android:id="@+id/phone_number_text"
-        tools:text="My Phone No :"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context="com.waoss.ciby.ProducerDetailsActivity">
 
     <Button
-        android:text="Add Item"
+        android:id="@+id/grocery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="96dp"
         android:layout_marginEnd="24dp"
+        android:text="Grocery"
+        android:onClick="groceryButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/phone_number_text"
-        android:id="@+id/previous_orders_button"
-        android:onClick="addItemOnClick"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="OnClick">
+
+    </Button>
 
     <Button
-        android:text="Remove Item"
+        android:id="@+id/milk"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="96dp"
         android:layout_marginEnd="24dp"
+        android:text="Milk products"
+        android:onClick="milkButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/previous_orders_button"
-        android:id="@+id/remove_item_button"
-        android:onClick="addItemOnClick"/>
+        app:layout_constraintTop_toBottomOf="@+id/grocery">
 
+    </Button>
 
     <Button
-        android:text="Available Items' List"
+        android:id="@+id/medicine"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="96dp"
         android:layout_marginEnd="24dp"
+        android:text="medicines"
+        android:onClick="medicineButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/remove_item_button"
-        android:id="@+id/available_items_button" />
+        app:layout_constraintTop_toBottomOf="@+id/milk">
+
+    </Button>
+
+    <Button
+        android:id="@+id/fruits"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="24dp"
+        android:text="fruits"
+        android:onClick="fruitsButtonOnClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/medicine">
+
+    </Button>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 package com.waoss.ciby.utils;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 import com.waoss.ciby.apis.User;
 
 public class PojoUser implements User {
@@ -17,7 +17,7 @@ public class PojoUser implements User {
     }
 
     @Override
-    public Location getLocation() {
+    public LatLng getLocation() {
         return null;
     }
 }

@@ -5,16 +5,12 @@ import android.location.Location;
 import java.util.List;
 
 public interface Consumer {
-    interface External {
-        Location getLocation();
-        String getPhoneNumber();
-    }
+//    interface External {
+//        Location getLocation();
+//        String getPhoneNumber();
+//    }
 
     interface Internal extends User {
-        List<Order> getOrders(Producer producer);
-
-        List<Order> getOrders();
-
-        List<Producer> getNearbyProducers();
+        List<? extends Producer.External> getNearbyProducers();
     }
 }

@@ -1,24 +1,25 @@
 package com.waoss.ciby.utils;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.waoss.ciby.apis.UserCredentials;
 
 public class PojoUserCredentials implements UserCredentials {
 
     private String username;
-    private String password;
+    private LatLng location;
 
-    public PojoUserCredentials(String username, String password) {
+    public PojoUserCredentials(String username, LatLng location) {
         this.username = username;
-        this.password = password;
+        this.location = location;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
-    public String getPassword() {
-        return null;
+    public LatLng getLocation() {
+        return location;
     }
 }

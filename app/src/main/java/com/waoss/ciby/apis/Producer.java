@@ -1,17 +1,18 @@
 package com.waoss.ciby.apis;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
 public interface Producer {
     interface External {
-        Location getLocation();
+        LatLng getLocation();
         String getPhoneNumber();
+        List<Item> getItemList();
     }
     interface Internal extends User {
-        List<Order> getOrders(Consumer consumer);
-        List<Order> getOrders();
-        Location getDeliveryLocation();
+        void addItem(Item item);
+        Item getItem(String name);
+        void removeItem(Item item);
     }
 }

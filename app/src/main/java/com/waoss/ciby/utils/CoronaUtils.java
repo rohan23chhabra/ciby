@@ -1,11 +1,9 @@
 package com.waoss.ciby.utils;
 
-import android.content.Context;
-import androidx.annotation.NonNull;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.gson.Gson;
+import com.waoss.ciby.firebase.FirebaseSession;
 
 public class CoronaUtils {
-
+    public static final Gson GSON = new Gson();
+    public static FirebaseSession SESSION = new FirebaseSession();
 }

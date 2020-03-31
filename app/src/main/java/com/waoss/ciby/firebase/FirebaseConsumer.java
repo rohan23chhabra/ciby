@@ -1,9 +1,9 @@
 package com.waoss.ciby.firebase;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 import com.waoss.ciby.apis.Consumer;
-import com.waoss.ciby.apis.Order;
-import com.waoss.ciby.apis.Producer;
+import com.waoss.ciby.apis.UserCredentials;
+import com.waoss.ciby.utils.PojoProducer;
 
 import java.util.List;
 
@@ -12,49 +12,28 @@ public class FirebaseConsumer implements Consumer {
     public static class Internal implements Consumer.Internal {
 
         private final FirebaseSession session;
-        private String username;
+        private UserCredentials userCredentials;
 
-        public Internal(FirebaseSession session, String username) {
+        public Internal(FirebaseSession session, UserCredentials userCredentials) {
             this.session = session;
-            this.username = username;
+            this.userCredentials = userCredentials;
         }
 
         @Override
-        public List<Order> getOrders(Producer producer) {
-            return null;
-        }
+        public List<PojoProducer> getNearbyProducers() {
+            // TODO : Implement this
 
-        @Override
-        public List<Order> getOrders() {
-            return null;
-        }
-
-        @Override
-        public List<Producer> getNearbyProducers() {
-            return null;
+            return session.getNearbyProducers(getLocation());
         }
 
         @Override
         public String getUsername() {
-            return username;
+            return userCredentials.getUsername();
         }
 
         @Override
-        public Location getLocation() {
-            return null;
-        }
-    }
-
-    public static class External implements Consumer.External {
-
-        @Override
-        public Location getLocation() {
-            return null;
-        }
-
-        @Override
-        public String getPhoneNumber() {
-            return null;
+        public LatLng getLocation() {
+            return userCredentials.getLocation();
         }
     }
 }

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,13 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.*;
 import com.google.gson.Gson;
+import com.waoss.ciby.apis.UserType;
 import com.waoss.ciby.firebase.FirebaseSession;
 import com.waoss.ciby.utils.PojoUser;
-import com.waoss.ciby.utils.PojoUserCredentials;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox chooseAuthField;
     private ProgressDialog progressDialog;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    private UserType userType;
+    private LatLng location;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         phoneNumberField = findViewById(R.id.username);
         passwordField = findViewById(R.id.password);
         chooseAuthField = findViewById(R.id.choose_auth);
+
+        userType = UserType.valueOf(getIntent().getExtras().getString("user-type"));
+        location = (LatLng) getIntent().getExtras().get("location");
 
         verifyPhoneNumberHelper();
     }
@@ -127,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // TODO : Implement login properly
     public void loginOnClick(View view) {
         String phoneNumber = phoneNumberField.getText().toString();
         Log.d("phone-number", phoneNumber);
@@ -137,14 +143,20 @@ public class LoginActivity extends AppCompatActivity {
         // Authenticate the user credentials from data saved in firebase.
         if (chooseAuthField.isChecked()) {
             if (phoneNumber != null && !phoneNumber.isEmpty()) {
-                verifyPhoneNumber(phoneNumber);
-                showProgressDialog(this, "Sending a verification code", false);
+                Intent intent = new Intent(this, userType == UserType.PRODUCER ? ProducerActivity.class : ConsumerActivity.class);
+                intent.putExtra("location", location);
+                intent.putExtra("sign-up", true);
+                intent.putExtra("username", phoneNumber);
+                startActivity(intent);
+//                verifyPhoneNumber(phoneNumber);
+//                showProgressDialog(this, "Sending a verification code", false);
             } else {
                 showToast("Please enter a valid number to continue!");
             }
         } else {
             FirebaseSession session = new FirebaseSession(false);
-            boolean loginStatus = session.login(new PojoUserCredentials(phoneNumber, passwordField.getText().toString()));
+            // TODO : Fetch location from location activity
+            //boolean loginStatus = session.login(new PojoUserCredentials(phoneNumber, passwordField.getText().toString()));
         }
         // Sign in or register accordingly.
     }
@@ -163,13 +175,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    private void showChoiceActivity() {
-        Intent intent = new Intent(this, ChoiceActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        startActivity(intent);
+        return;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -181,10 +189,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         FirebaseUser user = task.getResult().getUser();
                         Log.d("Sign in with phone auth", "Success " + user);
-                        FirebaseSession session = new FirebaseSession(true);
-                        session.writeData("users", new Gson().toJson(new PojoUser(phoneNumberField.getText().toString())));
-                        Log.d("nigga", "nigga vibin at " + session.readData("users", "?orderBy=\"username\"&equalTo=\"918840376642\""));
-                        showChoiceActivity();
+                        Intent intent = new Intent(this, userType == UserType.PRODUCER ? ProducerActivity.class : ConsumerActivity.class);
+                        intent.putExtra("location", location);
+                        intent.putExtra("sign-up", true);
+                        startActivity(intent);
                     } else {
                         notifyUserAndRetry("Your Phone Number Verification is failed.Retry again!");
                     }

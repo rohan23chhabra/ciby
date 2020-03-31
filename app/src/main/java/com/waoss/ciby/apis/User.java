@@ -1,8 +1,8 @@
 package com.waoss.ciby.apis;
 
-import android.location.Location;
+import com.google.android.gms.maps.model.LatLng;
 
 public interface User {
     String getUsername();
-    Location getLocation();
+    LatLng getLocation();
 }
