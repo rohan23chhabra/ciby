@@ -1,6 +1,10 @@
 package com.waoss.ciby;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
+import android.widget.EditText;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
@@ -9,10 +13,12 @@ import com.waoss.ciby.firebase.FirebaseSession;
 import com.waoss.ciby.utils.PojoItem;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class ProducerActivity extends AppCompatActivity {
 
     private FirebaseSession session;
+    private String[] currentStrings = new String[1];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +28,8 @@ public class ProducerActivity extends AppCompatActivity {
     }
 
     public void addItemOnClick(View view) {
-        session.addItem(new PojoItem("rabdi", "food", 1,
-                Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber()));
+        final Intent intent = new Intent(this, AddItemActivity.class);
+        startActivity(intent);
     }
+
 }

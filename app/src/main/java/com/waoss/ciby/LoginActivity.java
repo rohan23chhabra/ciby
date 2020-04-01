@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         userType = UserType.valueOf(getIntent().getExtras().getString("user-type"));
         location = (LatLng) getIntent().getExtras().get("location");
 
+        System.setProperty("user.phonenumber", phoneNumberField.getText().toString());
+
         verifyPhoneNumberHelper();
     }
 

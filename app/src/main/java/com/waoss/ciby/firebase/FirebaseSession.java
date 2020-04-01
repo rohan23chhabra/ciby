@@ -8,14 +8,13 @@ import com.google.gson.reflect.TypeToken;
 import com.waoss.ciby.apis.*;
 import com.waoss.ciby.utils.PojoItem;
 import com.waoss.ciby.utils.PojoProducer;
+import com.waoss.ciby.utils.PojoZone;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -97,7 +96,7 @@ public class FirebaseSession implements Session {
 
     public void addItem(Item item) {
         String itemJson = GSON.toJson(item);
-        writeData("items/" + item.getName(), itemJson);
+        writeData("items", itemJson);
     }
 
     public Item getItem(String name) {
@@ -138,7 +137,6 @@ public class FirebaseSession implements Session {
         Type listType = new TypeToken<List<PojoProducer>>() {}.getType();
         return GSON.fromJson(readData("producers", ""), listType);
     }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static class CallbackFuture extends CompletableFuture<Response> implements Callback {
 

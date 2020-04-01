@@ -39,7 +39,7 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
         fusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(this);
         userType = UserType.valueOf(String.valueOf(getIntent().getExtras().getString("user-type")));
-        Log.d("user-type-map", userType.toString());
+        Log.d("user-type-on-map", userType.toString());
     }
 
 
@@ -177,10 +177,19 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
 
     public void setFinalLocationOnClick(View view) {
         Log.d("set-location-button", "click hua");
+        showDestinationActivity();
+    }
 
-        final Intent intent = new Intent(LocationActivity.this, LoginActivity.class);
-        intent.putExtra("location", markedLocation);
-        intent.putExtra("user-type", userType.toString());
+    private void showDestinationActivity() {
+        final Intent intent;
+        if (userType == UserType.MIGRATING_WORKER) {
+            intent = new Intent(LocationActivity.this, EmergencyActivity.class);
+            intent.putExtra("location", markedLocation);
+        } else {
+            intent = new Intent(LocationActivity.this, LoginActivity.class);
+            intent.putExtra("location", markedLocation);
+            intent.putExtra("user-type", userType.toString());
+        }
         startActivity(intent);
     }
 }

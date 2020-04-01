@@ -1,6 +1,7 @@
 package com.waoss.ciby;
 
 import android.content.Intent;
+import android.location.Geocoder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,8 +17,11 @@ import com.waoss.ciby.utils.CoronaUtils;
 import com.waoss.ciby.utils.PojoProducer;
 import com.waoss.ciby.utils.PojoUserCredentials;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.waoss.ciby.utils.CoronaUtils.*;
@@ -42,7 +46,11 @@ public class ConsumerActivity extends AppCompatActivity {
         List<? extends Producer.External> producers = consumerInternal.getNearbyProducers();
         Log.d("prodo", producers.toString());
 
-        List<String> phoneNumbers = producers.stream().map(Producer.External::getPhoneNumber).collect(Collectors.toList());
+        List<String> phoneNumbers = producers.stream().map(producer -> {
+            String address = getAddress(producer.getLocation());
+            String phoneNumber = producer.getPhoneNumber();
+            return phoneNumber + "\n" + address;
+        }).collect(Collectors.toList());
 
         listView = findViewById(R.id.producer_list);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.listview_producer, R.id.producer_phone_number, phoneNumbers);
@@ -53,6 +61,18 @@ public class ConsumerActivity extends AppCompatActivity {
             Log.d("click-click", phoneNumber);
             showDetailedProducerActivity(phoneNumber);
         });
+    }
+
+    private String getAddress(LatLng location) {
+        try {
+            return new Geocoder(this, Locale.getDefault())
+                    .getFromLocation(location.latitude, location.longitude, 1)
+                    .get(0)
+                    .getAddressLine(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "An error occurred while getting the address";
     }
 
     private void showDetailedProducerActivity(String phoneNumber) {
